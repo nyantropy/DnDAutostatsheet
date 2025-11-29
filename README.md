@@ -40,7 +40,10 @@ This sheet is designed to work on Linux using Master PDF Editor, but should also
 ## 🙏 Credits & Acknowledgements
 
 This project builds upon the official form-fillable Dungeons & Dragons 5e Character Sheet, published by Wizards of the Coast and distributed via D&D Beyond.
-You can find the original sheet here:
-https://media.dndbeyond.com/compendium-images/marketing/dnd_5e_charactersheet_formfillable.pdf
 
-All artwork, layout, and design elements in the base PDF are the property of Wizards of the Coast. This project does not claim ownership of the original sheet, nor is it affiliated with, endorsed by, or sponsored by Wizards of the Coast or D&D Beyond.
+You can find the original sheet here:
+
+📄 **[Official D&D 5e Form-Fillable Character Sheet](https://media.dndbeyond.com/compendium-images/marketing/dnd_5e_charactersheet_formfillable.pdf)**
+
+All artwork, layout, and design elements in the base PDF are the property of Wizards of the Coast.
+This project does not claim ownership of the original sheet, nor is it affiliated with, endorsed by, or sponsored by Wizards of the Coast or D&D Beyond.
