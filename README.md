@@ -18,8 +18,11 @@ This sheet is designed to work on Linux using Master PDF Editor, but should also
 
 ---
 
-## 🧩 Planned Extensions
-- Multiclass Support
+## 🧩 Planned Extensions/Reworks
+- Multiclass Support ✔️
+- better Spellslot Support
+- Toggle for Single Class/ Multiclass
+- Support for Miscellaneous Stats, like Carry Weight 
 
 ---
 
