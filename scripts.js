@@ -135,26 +135,29 @@ function calculateSkill(mod, bonus, profbonus, addbonus)
 // single source of truth regarding class mapping
 function getClassRegistry()
 {
-    var classRegistry = {
-        Barbarian:  { levelField: "BarbarianLevel",  hitDie: 12 },
-        Bard:       { levelField: "BardLevel",       hitDie: 8  },
-        Cleric:     { levelField: "ClericLevel",     hitDie: 8  },
-        Druid:      { levelField: "DruidLevel",      hitDie: 8  },
-        Fighter:    { levelField: "FighterLevel",    hitDie: 10 },
-        Monk:       { levelField: "MonkLevel",       hitDie: 8  },
-        Paladin:    { levelField: "PaladinLevel",    hitDie: 10 },
-        Ranger:     { levelField: "RangerLevel",     hitDie: 10 },
-        Rogue:      { levelField: "RogueLevel",      hitDie: 8  },
-        Sorcerer:   { levelField: "SorcererLevel",   hitDie: 6  },
-        Warlock:    { levelField: "WarlockLevel",    hitDie: 8  },
-        Wizard:     { levelField: "WizardLevel",     hitDie: 6  },
-        Artificer:  { levelField: "ArtificerLevel",  hitDie: 8  },
-        Mystic:     { levelField: "MysticLevel",     hitDie: 8  },
-        Monster:    { levelField: "MonsterLevel",    hitDie: 8  },
+    var classRegistry = 
+    {
+        Barbarian:  { levelField: "BarbarianLevel",  hitDie: 12, spellAbility: "",              spellModField: "" },
+        Bard:       { levelField: "BardLevel",       hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod" },
+        Cleric:     { levelField: "ClericLevel",     hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod" },
+        Druid:      { levelField: "DruidLevel",      hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod" },
+        Fighter:    { levelField: "FighterLevel",    hitDie: 10, spellAbility: "Intelligence",  spellModField: "INTmod" },
+        Monk:       { levelField: "MonkLevel",       hitDie: 8,  spellAbility: "",              spellModField: "" },
+        Paladin:    { levelField: "PaladinLevel",    hitDie: 10, spellAbility: "Charisma",      spellModField: "CHAmod" },
+        Ranger:     { levelField: "RangerLevel",     hitDie: 10, spellAbility: "Wisdom",        spellModField: "WISmod" },
+        Rogue:      { levelField: "RogueLevel",      hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod" },
+        Sorcerer:   { levelField: "SorcererLevel",   hitDie: 6,  spellAbility: "Charisma",      spellModField: "CHAmod" },
+        Warlock:    { levelField: "WarlockLevel",    hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod" },
+        Wizard:     { levelField: "WizardLevel",     hitDie: 6,  spellAbility: "Intelligence",  spellModField: "INTmod" },
+
+        Artificer:  { levelField: "ArtificerLevel",  hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod" },
+        Mystic:     { levelField: "MysticLevel",     hitDie: 8,  spellAbility: "",              spellModField: "" },
+        Monster:    { levelField: "MonsterLevel",    hitDie: 8,  spellAbility: "",              spellModField: "" }
     };
 
     return classRegistry;
 }
+
 
 // get the level list of all supported classes of the sheet
 function getLevelFieldList(classRegistry) 
@@ -318,4 +321,66 @@ function updateHitDiceGrid(classRegistry)
 
         this.getField(slot.type).value = "/ " + d.level + "d" + d.hitDie;
     }
+}
+
+// needed for spellcasting class sanitization which allows us to simply map to the default class registry
+function sanitizeClassName(str)
+{
+    if (!str) return "";
+
+    var name = String(str).trim();
+
+    // remove anything in parentheses
+    var idx = name.indexOf("(");
+    if (idx !== -1) 
+    {
+        name = name.substring(0, idx).trim();
+    }
+
+    return name;
+}
+
+// fetches the appropriate spellcasting ability from the class registry
+function getSpellcastingAbility(selectedClass, classRegistry)
+{
+    var clean = sanitizeClassName(selectedClass);
+
+    if (classRegistry[clean]) 
+    {
+        return classRegistry[clean].spellAbility || "";
+    }
+
+    return "";
+}
+
+// calculate the spell save dc according to the formula
+function calculateSpellSaveDC(selectedClass, classRegistry, proficiency)
+{
+    var clean = sanitizeClassName(selectedClass);
+
+    var entry = classRegistry[clean];
+    if (!entry || !entry.spellModField) 
+    {
+        return "";
+    }
+
+    var mod  = Number(this.getField(entry.spellModField).value) || 0;
+
+    return 8 + proficiency + mod;
+}
+
+// calculate the spell attack bonus according to the formula
+function calculateSpellAttackBonus(selectedClass, classRegistry, proficiency)
+{
+    var clean = sanitizeClassName(selectedClass);
+
+    var entry = classRegistry[clean];
+    if (!entry || !entry.spellModField) 
+    {
+        return "";
+    }
+
+    var mod  = Number(this.getField(entry.spellModField).value) || 0;
+
+    return proficiency + mod;
 }
