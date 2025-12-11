@@ -137,22 +137,28 @@ function getClassRegistry()
 {
     var classRegistry = 
     {
-        Barbarian:  { levelField: "BarbarianLevel",  hitDie: 12, spellAbility: "",              spellModField: "" },
-        Bard:       { levelField: "BardLevel",       hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod" },
-        Cleric:     { levelField: "ClericLevel",     hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod" },
-        Druid:      { levelField: "DruidLevel",      hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod" },
-        Fighter:    { levelField: "FighterLevel",    hitDie: 10, spellAbility: "Intelligence",  spellModField: "INTmod" },
-        Monk:       { levelField: "MonkLevel",       hitDie: 8,  spellAbility: "",              spellModField: "" },
-        Paladin:    { levelField: "PaladinLevel",    hitDie: 10, spellAbility: "Charisma",      spellModField: "CHAmod" },
-        Ranger:     { levelField: "RangerLevel",     hitDie: 10, spellAbility: "Wisdom",        spellModField: "WISmod" },
-        Rogue:      { levelField: "RogueLevel",      hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod" },
-        Sorcerer:   { levelField: "SorcererLevel",   hitDie: 6,  spellAbility: "Charisma",      spellModField: "CHAmod" },
-        Warlock:    { levelField: "WarlockLevel",    hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod" },
-        Wizard:     { levelField: "WizardLevel",     hitDie: 6,  spellAbility: "Intelligence",  spellModField: "INTmod" },
+        Barbarian:  { levelField: "BarbarianLevel",  hitDie: 12, spellAbility: "",              spellModField: "",       casterWeight: 0     },
+        Bard:       { levelField: "BardLevel",       hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod", casterWeight: 1     },
+        Cleric:     { levelField: "ClericLevel",     hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod", casterWeight: 1     },
+        Druid:      { levelField: "DruidLevel",      hitDie: 8,  spellAbility: "Wisdom",        spellModField: "WISmod", casterWeight: 1     },
 
-        Artificer:  { levelField: "ArtificerLevel",  hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod" },
-        Mystic:     { levelField: "MysticLevel",     hitDie: 8,  spellAbility: "",              spellModField: "" },
-        Monster:    { levelField: "MonsterLevel",    hitDie: 8,  spellAbility: "",              spellModField: "" }
+        Fighter:    { levelField: "FighterLevel",    hitDie: 10, spellAbility: "Intelligence",  spellModField: "INTmod", casterWeight: 1/3   },
+        Monk:       { levelField: "MonkLevel",       hitDie: 8,  spellAbility: "",              spellModField: "",       casterWeight: 0     },
+
+        Paladin:    { levelField: "PaladinLevel",    hitDie: 10, spellAbility: "Charisma",      spellModField: "CHAmod", casterWeight: 0.5   },
+        Ranger:     { levelField: "RangerLevel",     hitDie: 10, spellAbility: "Wisdom",        spellModField: "WISmod", casterWeight: 0.5   },
+
+        Rogue:      { levelField: "RogueLevel",      hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod", casterWeight: 1/3   },
+        Sorcerer:   { levelField: "SorcererLevel",   hitDie: 6,  spellAbility: "Charisma",      spellModField: "CHAmod", casterWeight: 1     },
+
+        // warlock caster weight may or may not impact spell slots
+        Warlock:    { levelField: "WarlockLevel",    hitDie: 8,  spellAbility: "Charisma",      spellModField: "CHAmod", casterWeight: 0     },
+        Wizard:     { levelField: "WizardLevel",     hitDie: 6,  spellAbility: "Intelligence",  spellModField: "INTmod", casterWeight: 1     },
+
+        // weird classes that i really havent taken a good look at, so this might not be correct
+        Artificer:  { levelField: "ArtificerLevel",  hitDie: 8,  spellAbility: "Intelligence",  spellModField: "INTmod", casterWeight: 0.5   },
+        Mystic:     { levelField: "MysticLevel",     hitDie: 8,  spellAbility: "",              spellModField: "",       casterWeight: 0     },
+        Monster:    { levelField: "MonsterLevel",    hitDie: 8,  spellAbility: "",              spellModField: "",       casterWeight: 0     }
     };
 
     return classRegistry;
@@ -383,4 +389,63 @@ function calculateSpellAttackBonus(selectedClass, classRegistry, proficiency)
     var mod  = Number(this.getField(entry.spellModField).value) || 0;
 
     return proficiency + mod;
+}
+
+function getSpellSlots()
+{
+    var spellSlots = 
+    {
+        1:  [2,0,0,0,0,0,0,0,0],
+        2:  [3,0,0,0,0,0,0,0,0],
+        3:  [4,2,0,0,0,0,0,0,0],
+        4:  [4,3,0,0,0,0,0,0,0],
+        5:  [4,3,2,0,0,0,0,0,0],
+        6:  [4,3,3,0,0,0,0,0,0],
+        7:  [4,3,3,1,0,0,0,0,0],
+        8:  [4,3,3,2,0,0,0,0,0],
+        9:  [4,3,3,3,1,0,0,0,0],
+        10: [4,3,3,3,2,0,0,0,0],
+        11: [4,3,3,3,2,1,0,0,0],
+        12: [4,3,3,3,2,1,0,0,0],
+        13: [4,3,3,3,2,1,1,0,0],
+        14: [4,3,3,3,2,1,1,0,0],
+        15: [4,3,3,3,2,1,1,1,0],
+        16: [4,3,3,3,2,1,1,1,0],
+        17: [4,3,3,3,2,1,1,1,1],
+        18: [4,3,3,3,3,1,1,1,1],
+        19: [4,3,3,3,3,2,1,1,1],
+        20: [4,3,3,3,3,2,2,1,1]
+    };
+
+    return spellSlots;
+}
+
+// calculate the caster level of the character, dependent on classes that can cast spells
+// casterWeight refers to the impact each class level has on the formula, with things like
+// Bard or Cleric fully contributing, while half casters like Rangers only contribute half their level to the
+// overall caster level
+function calculateCasterLevel(classRegistry)
+{
+    var total = 0;
+    for (var cls in classRegistry) 
+    {
+        var entry = classRegistry[cls];
+        var lvlField = this.getField(entry.levelField);
+        if (!lvlField) continue;
+        
+        var lvl = Number(lvlField.value) || 0;
+        total += lvl * (entry.casterWeight || 0);
+    }
+
+    return Math.floor(total);
+}
+
+// no real logic here, we just look up what slots we get in the hard defined spellslot table
+function calculateSpellSlots(spellSlots, casterLevel)
+{
+    if (casterLevel < 1) return [0,0,0,0,0,0,0,0,0];
+
+    if (casterLevel > 20) casterLevel = 20;
+
+    return spellSlots[casterLevel];
 }
